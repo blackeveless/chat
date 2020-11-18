@@ -45,12 +45,12 @@ export default new Router({
     },
     {
       path: '/main',
-      component: () => import(/* webpackChunkName: "main" */ './views/Main.vue'),
+      component: () => import(/* webpackChunkName: "main" */ '@/views/Main.vue'),
       beforeEnter: checkAuth
     },
     {
       path: '/500',
-      component: () => import(/* webpackChunkName: "errors" */ './errors/ServerError.vue') 
+      component: () => import(/* webpackChunkName: "errors" */ '@/views/errors/ServerError.vue') 
     },
     {
       path: '/logout/*',
@@ -66,7 +66,7 @@ export default new Router({
     },
     {
       path: '*',
-      component: () => import(/* webpackChunkName: "errors" */ './errors/NotFound.vue')
+      component: () => import(/* webpackChunkName: "errors" */ '@/views/errors/NotFound.vue')
     }
   ]
 })
