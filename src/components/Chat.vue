@@ -59,6 +59,15 @@ export default {
       }
     },
     sendMessage() {
+      if (this.message.length > 10500) {
+        this.$buefy.toast.open({
+          message: `Message text too big. Max length 10500 characters.`,
+          type: 'is-danger',
+          position: 'is-top',
+          duration: '4000'
+        });
+        return;
+      }
       const message = {text: this.message, room: this.$store.state.currentRoomName, id: uuidv4()};
       this.$store.dispatch('sendMessage', message)
         .then(() => {

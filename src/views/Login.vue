@@ -27,6 +27,15 @@ export default {
   methods: {
     login() {
       if (this.nickname === '') return;
+      if (this.nickname.length > 50) {
+        this.$buefy.toast.open({
+          message: `Login too big. Max length 50 characters.`,
+          type: 'is-danger',
+          position: 'is-top',
+          duration: '4000'
+        });
+        return;
+      }
       this.$store.dispatch('login', this.nickname)
         .then(() => {
           this.$router.push('/main');

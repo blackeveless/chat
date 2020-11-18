@@ -44,6 +44,15 @@ export default {
         });
     },
     createNewRoom() {
+      if (this.newRoom.length > 50) {
+        this.$buefy.toast.open({
+          message: `Room name too big. Max length 50 characters.`,
+          type: 'is-danger',
+          position: 'is-top',
+          duration: '4000'
+        });
+        return;
+      }
       let newRoom = {name: this.newRoom, last_message: {}};
       this.$store.dispatch('createNewRoom', newRoom)
         .then(() => {
