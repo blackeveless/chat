@@ -44,15 +44,6 @@ export default {
         });
     },
     createNewRoom() {
-      if (/\//gi.test(this.newRoom)) {
-        this.$buefy.toast.open({
-            duration: 5000,
-            message: `Room contains illegal characters.`,
-            position: 'is-top',
-            type: 'is-danger'
-        });
-        return;
-      }
       let newRoom = {name: this.newRoom, last_message: {}};
       this.$store.dispatch('createNewRoom', newRoom)
         .then(() => {

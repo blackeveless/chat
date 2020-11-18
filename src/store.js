@@ -48,9 +48,6 @@ export default new Vuex.Store({
       state.sendingMessageState = 'Sended to server';
       state.sendedMessage = sendedMessage;  
     },
-    createWs(state) {
-      state.ws = new WebSocket(`wss://nane.tada.team/ws?username=${state.login}`);
-    },
     isWsOpened(state, isOpened) {
       state.isWsOpened = isOpened;
     },
@@ -108,7 +105,7 @@ export default new Vuex.Store({
     loadHistory({ commit, state }, currentRoomName) {
       return new Promise((resolve, reject) => {
         commit('resetHistory');
-        fetch(`https://nane.tada.team/api/rooms/${currentRoomName}/history`)
+        fetch(`https://nane.tada.team/api/rooms/${encodeURIComponent(currentRoomName)}/history`)
           .then(response => {
             if (response.ok) {
               return response.json();
@@ -146,7 +143,7 @@ export default new Vuex.Store({
     },
     createWs({ commit, state }) {
       return new Promise((resolve, reject) => {
-        state.ws = new WebSocket(`wss://nane.tada.team/ws?username=${encodeURI(state.login)}`);
+        state.ws = new WebSocket(`wss://nane.tada.team/ws?username=${encodeURIComponent(state.login)}`);
         state.ws.onopen = event => {
           commit('isWsOpened', true);
         };

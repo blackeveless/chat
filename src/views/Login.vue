@@ -27,17 +27,7 @@ export default {
   methods: {
     login() {
       if (this.nickname === '') return;
-      let validateNickname = JSON.parse(JSON.stringify(decodeURI(this.nickname))).trim();
-      if (validateNickname === '') {
-        this.$buefy.toast.open({
-            duration: 5000,
-            message: `Login contains illegal characters.`,
-            position: 'is-top',
-            type: 'is-danger'
-        });
-        return;
-      }
-      this.$store.dispatch('login', validateNickname)
+      this.$store.dispatch('login', this.nickname)
         .then(() => {
           this.$router.push('/main');
           this.nickname = '';
