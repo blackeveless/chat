@@ -6,19 +6,19 @@
         <Rooms/>
       </div>
       <div class="column is-fullheight">
-        <Chart/>
+        <Chat/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Rooms from './Rooms.vue';
-import Chart from './Chart.vue';
+import Rooms from '@/components/Rooms.vue';
+import Chat from '@/components/Chat.vue';
 
 export default {
   name: 'Main',
-  components: { Rooms, Chart },
+  components: { Rooms, Chat },
   data() {
     return {
     }

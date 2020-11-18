@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store'
-import Login from './components/Login.vue'
+import Login from './views/Login.vue'
 
 Vue.use(Router)
 
@@ -45,12 +45,12 @@ export default new Router({
     },
     {
       path: '/main',
-      component: () => import(/* webpackChunkName: "main" */ './components/Main.vue'),
+      component: () => import(/* webpackChunkName: "main" */ './views/Main.vue'),
       beforeEnter: checkAuth
     },
     {
       path: '/500',
-      component: () => import(/* webpackChunkName: "errors" */ './components/errors/ServerError.vue') 
+      component: () => import(/* webpackChunkName: "errors" */ './errors/ServerError.vue') 
     },
     {
       path: '/logout/*',
@@ -66,7 +66,7 @@ export default new Router({
     },
     {
       path: '*',
-      component: () => import(/* webpackChunkName: "errors" */ './components/errors/NotFound.vue')
+      component: () => import(/* webpackChunkName: "errors" */ './errors/NotFound.vue')
     }
   ]
 })

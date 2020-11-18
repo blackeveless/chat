@@ -9,7 +9,7 @@
         </div>
         <div class="column has-text-right">
           <span>
-            {{ new Date(message.created).toLocaleString('ru-RU', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'}) }}
+            {{ new Date(message.created).toLocaleString(currentLocale, { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'}) }}
           </span>
         </div>
       </div>
