@@ -12,7 +12,8 @@ export default new Vuex.Store({
     sendingMessageState: null,
     sendedMessage: null,
     currentRoomName: null,
-    isWsOpened: false
+    isWsOpened: false,
+    serverSettings: null
   },
   getters: {
     isLoggedIn: state => {
@@ -32,6 +33,7 @@ export default new Vuex.Store({
       state.currentHistory = null;
       state.sendingMessageState = null;
       state.sendedMessage = null;
+      state.serverSettings = null;
     },
     loadRooms(state, roomList) {
       state.roomList = roomList;
@@ -61,6 +63,9 @@ export default new Vuex.Store({
       let room = state.roomList.filter(room => room.name === message.room)[0];
       room.last_message = message;
     },
+    setServerSettings(state, serverSettings) {
+      state.serverSettings = serverSettings;
+    }
   },
   actions: {
     login({ commit, state }, nickname) {
@@ -74,7 +79,6 @@ export default new Vuex.Store({
           .catch(err => {  
             reject();
           })
-        
       });
     },
     logout({ commit, state }) {
@@ -99,8 +103,7 @@ export default new Vuex.Store({
           .catch(err => {  
             reject(err);
           })
-        
-        });
+      });
     },
     loadHistory({ commit, state }, currentRoomName) {
       return new Promise((resolve, reject) => {
@@ -141,36 +144,9 @@ export default new Vuex.Store({
         }  
       });
     },
-    createWs({ commit, state }) {
+    createWs({ commit, state }, ws) {
       return new Promise((resolve, reject) => {
-        state.ws = new WebSocket(`wss://nane.tada.team/ws?username=${encodeURIComponent(state.login)}`);
-        state.ws.onopen = event => {
-          commit('isWsOpened', true);
-        };
-        state.ws.onmessage = event => {
-          let message = JSON.parse(event.data);
-          if (state.sendedMessage !== null && message.id === state.sendedMessage.id) {
-            state.sendingMessageState = null;
-            state.sendedMessage = null;
-          }
-          if (message.room === state.currentRoomName) {
-            commit('updateCurrentHistory', message);
-          }
-          let room = state.roomList.filter(room => room.name === message.room)[0];
-          if (room === undefined) {
-            let newRoom = {name: message.room, last_message: message}
-            commit('addNewRoom', newRoom);
-          } else {
-            commit('updateRoom', message);
-          }
-        };
-        state.ws.onerror = event => {
-          commit('isWsOpened', false);
-          throw event;
-        };
-        state.ws.onclose = event => {
-          commit('isWsOpened', false);
-        };
+        state.ws = ws;
         resolve();
       });
     },
@@ -179,6 +155,22 @@ export default new Vuex.Store({
         commit('addNewRoom', newRoom);
         resolve();
       });
-    }
+    },
+    loadServerSettings({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        fetch('https://nane.tada.team/api/settings')
+          .then(response => {
+            return response.json();
+          })
+          .then(res => {
+            let serverSettings = res.result;
+            commit('setServerSettings', serverSettings);
+            resolve();
+          })
+          .catch(err => {  
+            reject(err);
+          })
+      });
+    },
   }
 })

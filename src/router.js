@@ -49,8 +49,8 @@ export default new Router({
       beforeEnter: checkAuth
     },
     {
-      path: '/500',
-      component: () => import(/* webpackChunkName: "errors" */ '@/views/errors/ServerError.vue') 
+      path: '/conerr',
+      component: () => import(/* webpackChunkName: "errors" */ '@/views/errors/ConnectionError.vue') 
     },
     {
       path: '/logout/*',
@@ -61,7 +61,7 @@ export default new Router({
       redirect: '/404'
     },
     {
-      path: '/500/*',
+      path: '/conerr/*',
       redirect: '/404'
     },
     {

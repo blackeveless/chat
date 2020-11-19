@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     isSelfMessage() {
-      return decodeURI(JSON.stringify(this.$store.state.login)) === decodeURI(JSON.stringify(this.message.sender.username));
+      return JSON.stringify(this.$store.state.login) === JSON.stringify(this.message.sender.username);
     }
   },
   created() {

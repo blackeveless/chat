@@ -1,10 +1,10 @@
 <template>
   <div class="container is-fullheight">  
     <b-loading v-model="isLoading" :is-full-page="false"/>
-    <b-notification v-if="isLoading" :closable="false">
+    <b-notification v-show="isLoading" :closable="false">
       Loading history
     </b-notification>
-    <div v-else class="box is-flex is-flex-direction-column is-fullheight">
+    <div v-show="!isLoading" class="box is-flex is-flex-direction-column is-fullheight">
       <div class="container is-flex is-scrollable is-fullwidth has-background-light p-2 m-2">
         <div class="container is-flex is-flex-direction-column is-scrollable" ref="scrolling">
           <Message v-for="message in $store.state.currentHistory" :message="message" :key="message.created"/>
@@ -43,7 +43,6 @@ export default {
   data() {
     return {
       message: null,
-      currentLocale: 'en-US',
       statusMessage: null
     }
   },
@@ -59,12 +58,12 @@ export default {
       }
     },
     sendMessage() {
-      if (this.message.length > 10500) {
+      if (this.message.length > this.$store.state.serverSettings.max_message_length) {
         this.$buefy.toast.open({
-          message: `Message text too big. Max length 10500 characters.`,
+          message: `Message text too big. Max length ${this.$store.state.serverSettings.max_message_length} characters.`,
           type: 'is-danger',
           position: 'is-top',
-          duration: '4000'
+          duration: 4000
         });
         return;
       }
@@ -75,7 +74,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.$router.push('/500');
+          this.$router.push('/conerr');
         });
     }
   },

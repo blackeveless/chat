@@ -37,27 +37,39 @@ export default {
     updateHistory(newRoom, oldRoom) {
       this.currentRoom = newRoom;
       this.$store.dispatch('loadHistory', this.currentRoom.name)
-        .then(() => this.isLoading = false)
+        .then(() => {
+          this.isLoading = false;
+        })
         .catch(err => {
           console.log(err);
-          this.$router.push('/500');
+          this.$router.push('/conerr');
         });
     },
     createNewRoom() {
-      if (this.newRoom.length > 50) {
+      let trimedRoom = this.newRoom.trim();
+      if (trimedRoom.length === 0) {
         this.$buefy.toast.open({
-          message: `Room name too big. Max length 50 characters.`,
-          type: 'is-danger',
+          message: `Empty room name`,
+          type: 'is-warning',
           position: 'is-top',
-          duration: '4000'
+          duration: 4000
         });
         return;
       }
-      let newRoom = {name: this.newRoom, last_message: {}};
+      if (trimedRoom.length > this.$store.state.serverSettings.max_room_title_length) {
+        this.$buefy.toast.open({
+          message: `Room name too big. Max length ${this.$store.state.serverSettings.max_room_title_length} characters.`,
+          type: 'is-danger',
+          position: 'is-top',
+          duration: 4000
+        });
+        return;
+      }
+      let newRoom = {name: trimedRoom, last_message: {}};
       this.$store.dispatch('createNewRoom', newRoom)
         .then(() => {
           this.$refs.inputRooms.getElement().blur();
-          this.currentRoom = this.$store.state.roomList.filter(room => room.name === this.newRoom)[0];
+          this.currentRoom = this.$store.state.roomList.filter(room => room.name === trimedRoom)[0];
           this.newRoom = null;
           this.updateHistory(this.currentRoom);
         })
@@ -70,12 +82,14 @@ export default {
         this.currentRoom = this.$store.state.roomList[0];
         this.isLoading = false;
         this.$store.dispatch('loadHistory', this.currentRoom.name)
-          .then(() => this.isLoading = false)
-          .catch(err => console.log(err));
+          .then(() => {
+            this.isLoading = false;
+          })
+          .catch(err => {throw err});
       })
       .catch(err => {
         console.log(err);
-        this.$router.push('/500');
+        this.$router.push('/conerr');
       });
   }
 }
